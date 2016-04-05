@@ -127,7 +127,7 @@ static void default_exception_handler(struct thread_regs *frame)
 static inline void mask_irq(int irq)
 { if (irqmask_count[irq]++ == 0) irqchip_mask(irqchip, irq); }
 
-void unmask_irq(int irq)
+static inline void unmask_irq(int irq)
 { if (--irqmask_count[irq] == 0) irqchip_unmask(irqchip, irq); }
 
 static inline void ack_irq(int irq)

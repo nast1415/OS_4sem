@@ -489,7 +489,9 @@ void *kmem_alloc(size_t size)
 	if (i == -1)
 		return 0;
 
+	lock(ld);
 	void* res = kmem_cache_alloc(kmem_pool[i]);
+	unlock(ld);
 
 	return res;
 }
@@ -502,8 +504,11 @@ void kmem_free(void *ptr)
 	struct kmem_slab *slab = kmem_get_slab(ptr);
 
 	if (!slab)
+		return;
 
+	lock(ld);
 	kmem_cache_free(slab->cache, ptr);
+	unlock(ld);
 }
 
 void setup_alloc(void)

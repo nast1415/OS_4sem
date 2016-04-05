@@ -176,14 +176,14 @@ void threads_test() {
 	pid_t test_function2_lock_pid = create_thread(test_function2_lock, (void*) 5);
 	printf("Threads test_function1_lock and test_function2_lock created\n");
 	
-	join(test_function1_lock_pid);
+	join_thread(test_function1_lock_pid);
 	printf("Joined thread test_function1_lock\n");
-	join(test_function2_lock_pid);
+	join_thread(test_function2_lock_pid);
 	printf("Joined thread test_function2_lock\n");
 
 	printf("Creating thread test_function1_join\n");
 	pid_t test_function1_join_pid = create_thread(test_function1_join, (void*) 5);
-	join(test_function1_join_pid);
+	join_thread(test_function1_join_pid);
 	printf("Joined thread test_function1_join\n");
 }
 

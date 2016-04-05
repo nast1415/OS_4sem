@@ -33,6 +33,8 @@ extern pid_t joins[MAX_CNT];
 void setup_threads(); 
 pid_t create_thread(void (*fptr)(void*), void* arg);
 
+void exit();
 void join(pid_t awaited_thread_id);
 
 void schedule();
+void switch_threads(void** old_sp, void* new_sp);

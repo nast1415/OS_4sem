@@ -3,7 +3,6 @@
 #include "ioport.h"
 #include "stdio.h"
 #include "time.h"
-#include "threads.h"
 
 /*
  * Timer/Counter Control Register Format:

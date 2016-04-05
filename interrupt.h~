@@ -36,8 +36,6 @@ static inline void irqchip_unmask(struct irqchip *chip, unsigned irq)
 static inline void irqchip_eoi(struct irqchip *chip, unsigned irq)
 { if (chip->eoi) chip->eoi(irq); }
 
-void unmask_irq(int irq);
-
 
 typedef void (*irq_t)(int irq);
 void register_irq_handler(int irq, irq_t isr);
