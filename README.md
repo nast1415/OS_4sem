@@ -1,2 +1,4 @@
 # OS_4sem
-My OS homeworks
+Домашнее задание №3
+
+Файлы, напрямую относящиеся к заданию: threads.c/.h, locks.c/.h
