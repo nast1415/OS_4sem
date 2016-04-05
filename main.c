@@ -117,28 +117,28 @@ void test_function2(void* arg) {
 	}
 }
 
-lock_descriptor* ld;
+lock_descriptor ld;
 
 void test_function1_lock(void* arg) {
-	lock(ld);
+	lock(&ld);
 	for (int i = 0; i < (long long) arg; i++) {
 		printf("test_function1_lock: %d\n", i);
 		local_irq_disable();
 		schedule();
 		local_irq_enable();
 	}
-	unlock(ld);
+	unlock(&ld);
 }
 
 void test_function2_lock(void* arg) {
-	lock(ld);
+	lock(&ld);
 	for (int i = 0; i < (long long) arg; i++) {
 		printf("test_function2_lock: %d\n", i);
 		local_irq_disable();
 		schedule();
 		local_irq_enable();
 	}
-	unlock(ld);
+	unlock(&ld);
 }
 
 void test_function2_join(void* arg) {
@@ -185,6 +185,8 @@ void threads_test() {
 	pid_t test_function1_join_pid = create_thread(test_function1_join, (void*) 5);
 	join(test_function1_join_pid);
 	printf("Joined thread test_function1_join\n");
+
+	printf("Tests finished\n");	
 }
 
 void main(void)

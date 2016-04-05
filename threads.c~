@@ -71,7 +71,7 @@ void schedule() {
 	//printf("I'm in schedule! I'm very glad!\n");
 	pid_t next_thread_id = (current_thread_id + 1) % number_of_threads;
 
-	while(1) {
+	for (;;) {
 		if (next_thread_id != current_thread_id) {
 			if (threads[next_thread_id].state == RUNNING) {
 				pid_t previous_thread_id = current_thread_id;
