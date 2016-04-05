@@ -123,9 +123,6 @@ void test_function1_lock(void* arg) {
 	lock(&ld);
 	for (int i = 0; i < (long long) arg; i++) {
 		printf("test_function1_lock: %d\n", i);
-		for (int j = 0; j < 5; j++) {
-			printf("test_function1_lock: second lock: %d\n", j);
-		}
 		local_irq_disable();
 		schedule();
 		local_irq_enable();
@@ -137,9 +134,6 @@ void test_function2_lock(void* arg) {
 	lock(&ld);
 	for (int i = 0; i < (long long) arg; i++) {
 		printf("test_function2_lock: %d\n", i);
-		for (int j = 0; j < 5; j++) {
-			printf("test_function2_lock: second lock: %d\n", j);
-		}
 		local_irq_disable();
 		schedule();
 		local_irq_enable();
