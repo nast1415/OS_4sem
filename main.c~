@@ -203,8 +203,5 @@ void main(void)
 	buddy_smoke_test();
 	slab_smoke_test();
 
-	local_irq_enable();
-	threads_test();
-
 	while (1);
 }
