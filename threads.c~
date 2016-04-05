@@ -63,7 +63,6 @@ void join(pid_t awaited_thread_id) {
         local_irq_enable();
     }
 }
-void switch_threads(void **old_sp, void *new_sp);
 
 void schedule() {
 	pid_t next_thread_id = (current_thread_id + 1) % number_of_threads;
