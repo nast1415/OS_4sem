@@ -1,1 +1,0 @@
-threads.o: threads.S
