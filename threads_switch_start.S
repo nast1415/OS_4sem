@@ -9,7 +9,6 @@ start_thread:
 
     callq *%rax
 
-    movq %rax, %rdi
     callq exit_thread
 
 //; void switch_threads(void∗∗ old_sp, void∗ new_sp); // C signature
