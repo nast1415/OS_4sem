@@ -4,7 +4,7 @@
 pid_t current_thread_id, number_of_threads;
 thread threads[MAX_CNT];
 pid_t joins[MAX_CNT];
-lock_descriptor* ld;
+lock descriptor* ld;
 
 
 void setup_threads() {
