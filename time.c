@@ -58,7 +58,6 @@ static void i8254_interrupt_handler(int irq)
 	(void) irq;
 	++jiffies;
 	if (jiffies % (HZ / 2) == 0) {
-        unmask_irq(irq);
         schedule();
     }
 }

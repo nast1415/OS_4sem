@@ -147,9 +147,10 @@ void isr_common_handler(struct thread_regs *ctx)
 
 	mask_irq(irqno);
 	ack_irq(irqno);
-	if (irq)
+	if (irq) {
+		unmask_irq(irqno);
 		irq(irqno);
-	unmask_irq(irqno);
+	}
 }
 
 void register_irq_handler(int irq, irq_t isr)
