@@ -7,7 +7,7 @@
 #include "kmem_cache.h"
 #include "assert.h"
 
-#define MAX_CNT 1000
+#define MAX_CNT 100000000
 
 typedef enum {RUNNING, JOINING, TERMINATED, DELETED} thread_state;
 

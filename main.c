@@ -157,7 +157,17 @@ void test_function1_join(void* arg) {
 	}
 }
 
+void test(void* arg) {
+	for (int i = 0; i < (long long) arg; i++) {
+		if (i % 100000 == 0) {
+			printf("test: %d\n", i);
+		}
+	}
+}
+
 void threads_test() {
+	create_thread(test, (void*) 30000000);
+
 	printf("Creating thread test_function1\n");
 	pid_t test_function1_pid = create_thread(test_function1, (void*) 10);
 	printf("Creating thread test_function2\n");
