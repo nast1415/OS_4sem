@@ -44,18 +44,20 @@ pid_t create_thread(void (*fptr)(void*), void* arg) {
 }
 
 void exit_thread() {
+	local_irq_disable();	
 	threads[current_thread_id].state = TERMINATED;
 
 	if (threads[joins[current_thread_id]].state == JOINING) {
 		threads[joins[current_thread_id]].state = RUNNING;
 	}
-	local_irq_disable();
-    schedule();
+	schedule();
 }
 
 void join(pid_t awaited_thread_id) {
+	local_irq_disable();	
 	threads[current_thread_id].state = JOINING;
 	joins[awaited_thread_id] = current_thread_id;
+	local_irq_enable();
 
 	while (threads[awaited_thread_id].state != TERMINATED && threads[awaited_thread_id].state != DELETED) {
         local_irq_disable();
