@@ -62,8 +62,9 @@ void join(pid_t awaited_thread_id) {
         //printf("I'm going to go the schedule from join!\n");
         schedule();
 		//printf("I came back from the schedule to join!\n");
-        local_irq_enable();
+        
     }
+	local_irq_enable();
 }
 void switch_threads(void **old_sp, void *new_sp);
 
