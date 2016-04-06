@@ -31,4 +31,6 @@ switch_threads:
     popq %rbx
     popq %rbp
 
+	sti
+
     ret
