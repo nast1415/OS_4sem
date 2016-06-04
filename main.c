@@ -99,111 +99,8 @@ static void slab_smoke_test(void)
 #undef ALLOCS
 }
 
-/*
-void test_function1(void* arg) {
-	for (int i = 0; i < (long long) arg; i++) {
-		printf("test_function1: %d\n", i);
-		local_irq_disable();
-		if (i % 6 == 0)
-			schedule();
-		local_irq_enable();
-	}
-}
-
-void test_function2(void* arg) {
-	for (int i = 0; i < (long long) arg; i++) {
-		printf("test_function2: %d\n", i);
-		local_irq_disable();
-		if (i % 6 == 0)
-			schedule();
-		local_irq_enable();
-	}
-}
-
-lock_descriptor ld;
-
-void test_function1_lock(void* arg) {
-	lock(&ld);
-	for (int i = 0; i < (long long) arg; i++) {
-		printf("test_function1_lock: %d\n", i);
-		local_irq_disable();
-		schedule();
-		local_irq_enable();
-	}
-	unlock(&ld);
-}
-
-void test_function2_lock(void* arg) {
-	lock(&ld);
-	for (int i = 0; i < (long long) arg; i++) {
-		printf("test_function2_lock: %d\n", i);
-		local_irq_disable();
-		schedule();
-		local_irq_enable();
-	}
-	unlock(&ld);
-}
-
-void test_function2_join(void* arg) {
-	for (int i = 0; i < (long long) arg; i++) {
-		printf("test_function2_join: %d\n", i);
-	}
-}
-
-void test_function1_join(void* arg) {
-	printf("Creating thread test_function2_join\n");
-	pid_t test_function2_join_pid = create_thread(test_function2_join, (void*) 5);
-	join(test_function2_join_pid);
-	printf("Joined thread test_function2_join\n");
-	for (int i = 0; i < (long long) arg; i++) {
-		printf("test_function1_join: %d\n", i);
-	}
-}
-
-void test(void* arg) {
-	for (int i = 0; i < (long long) arg; i++) {
-		if (i % 100000 == 0) {
-			printf("test: %d\n", i);
-		}
-	}
-}
-
-void threads_test() {
-	create_thread(test, (void*) 30000000);
-
-	printf("Creating thread test_function1\n");
-	pid_t test_function1_pid = create_thread(test_function1, (void*) 10);
-	printf("Creating thread test_function2\n");
-	pid_t test_function2_pid = create_thread(test_function2, (void*) 5);
-	printf("Threads test_function1 and test_function2 created\n");
-	
-	join(test_function1_pid);
-	printf("Joined thread test_function1\n");
-	join(test_function2_pid);
-	printf("Joined thread test_function2\n");
-
-
-	printf("Create thread test_function1_lock\n");
-	pid_t test_function1_lock_pid = create_thread(test_function1_lock, (void*) 5);
-	printf("Create thread test_function2_lock\n");
-	pid_t test_function2_lock_pid = create_thread(test_function2_lock, (void*) 5);
-	printf("Threads test_function1_lock and test_function2_lock created\n");
-	
-	join(test_function1_lock_pid);
-	printf("Joined thread test_function1_lock\n");
-	join(test_function2_lock_pid);
-	printf("Joined thread test_function2_lock\n");
-
-	printf("Creating thread test_function1_join\n");
-	pid_t test_function1_join_pid = create_thread(test_function1_join, (void*) 5);
-	join(test_function1_join_pid);
-	printf("Joined thread test_function1_join\n");
-
-	printf("Tests finished\n");	
-}*/
-
 void file_system_test() {
-    printf("Started file_system tests");
+    printf("Started file_system tests\n");
     
     fs_node* directory1 = mkdir("lib");
     printf("name of the new directory: %s \n", directory1->name);
@@ -213,42 +110,44 @@ void file_system_test() {
     printf("Open file lib/lib2/a.txt\n");
     fs_node* file1 = open("lib/lib2/a.txt");
     
-    char buffer[11];
-    char read_buffer[6];
-    for (int i = 0; i < 6; i++) {
+    char buffer[12];
+    char read_buffer[4];
+    for (int i = 0; i < 4; i++) {
         read_buffer[i] = 0;
     }
 
-    char buffer2[11];
-    char read_buffer2[8];
-    for (int i = 0; i < 8; i++) {
+    char buffer2[12];
+    char read_buffer2[4];
+    for (int i = 0; i < 4; i++) {
         read_buffer2[i] = 0;
     }
     
     memcpy(buffer, "hellokitty", 10);
+    buffer[10] = 0;
 
     printf("Write %s to lib/lib2/a.txt\n", buffer);
-    write(file1, 7, 0, buffer);
+    write(file1, 7, 1, buffer);
 
     printf("Read from lib/lib2/a.txt\n");
-    read(file1, 5, 1, read_buffer);
-    printf("Read 1..5 chars: %s\n", read_buffer);
+    read(file1, 3, 1, read_buffer);
+    printf("Read 1..3 chars: %s\n", read_buffer);
 
     printf("Open file lib/b.txt\n");
     fs_node* file2 = open("lib/b.txt");
 
     memcpy(buffer2, "helloworld", 10);
+    buffer2[10] = 0;
 
     printf("Write %s to lib/lib2/a.txt\n", buffer2);
-    write(file2, 7, 0, buffer2);
+    write(file2, 7, 1, buffer2);
 
     printf("Read from lib/lib2/a.txt\n");
-    read(file2, 6, 0, read_buffer2);
-    printf("Read 0..6 chars: %s\n", read_buffer2);
+    read(file2, 3, 2, read_buffer2);
+    printf("Read 2..5 chars: %s\n", read_buffer2);
     
     readdir(directory1);
 
-    printf("file_system test finished");  
+    printf("file_system test finished\n");  
 }
 
 void main(void)
