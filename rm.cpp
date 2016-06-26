@@ -41,7 +41,9 @@ void rm(string dir, string target_dir) {
 		for (int j = 0; j < number_of_ints_in_block; j++) {
 			alloc_table_array[number_of_ints_in_block * i + j] = data[j];
 		}
-	}
+	} //Now we get an allocation table
+
+	
 
 	vector<string> directories;
 	vector<int> sizes;
@@ -74,10 +76,13 @@ void rm(string dir, string target_dir) {
 	
 	int next_block_of_last_directory;
 	int first_block_of_deleting_dir = number; //Number of the block, where our file is placed
+	cerr << endl;
+	//cerr << "Number of the first block, where our file placed: " << first_block_of_deleting_dir + 1 << endl;
 	
 	int next_block_number = 0;
 	
 	while (true) {
+		cerr << "We're going to open file number: " << number << endl; 
 		char buffer2[100];
 		sprintf (buffer2, "%d", number);
 		string name2 = dir + "/block" + buffer2;
@@ -95,9 +100,11 @@ void rm(string dir, string target_dir) {
 			fclose(block2);
 		}
 
-		alloc_table_array[number + 1] = -1;
+		
 		next_block_number = alloc_table_array[number + 1];
 		next_block_number--;
+		alloc_table_array[number + 1] = -1;
+		//cerr << "Next block number is: " << next_block_number << endl;
 
 		if (next_block_number == number) {
 			break;
@@ -105,7 +112,6 @@ void rm(string dir, string target_dir) {
 			number = next_block_number;
 		}
 	}
-
 	
 	
 	//Delete from announcements
@@ -328,8 +334,8 @@ void rm(string dir, string target_dir) {
 	}
 
 	//Refreshing the allocation table
-	int number_of_changed_blocks = ceil(double((previous_number + 1) * sizeof(int)) / 4096);
-	for (int i = 0; i < number_of_changed_blocks; i++) {
+	//int number_of_changed_blocks = ceil(double((previous_number + 1) * sizeof(int)) / 4096);
+	for (int i = 0; i < number_of_the_root_block; i++) {
 		int data[number_of_ints_in_block] = {0, };
 		for (int j = 0; j < number_of_ints_in_block; j++) {
 			data[j] = alloc_table_array[(i * number_of_ints_in_block) + j];
@@ -348,6 +354,8 @@ void rm(string dir, string target_dir) {
 			fclose(block);
 		}
 	}
+
+	
 }
 
 int main (int argc, char* argv[])

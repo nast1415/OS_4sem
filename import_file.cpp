@@ -26,15 +26,8 @@ void import_f(string dir, string local_file, string target_file) {
 	int size_of_last_block = size % 4096;
 	if (size_of_last_block == 0) {
 		size_of_last_block = 4096;
-	}
+	} //CORRECT
 
-	int new_file = mkfile(dir, target_file, size_of_last_block);
-
-	if (new_file == -1) {
-		return;
-	}
-
-	
 	//Load allocation table
 	int number_of_ints_in_block = floor (4096 / sizeof(int));
 
@@ -68,19 +61,72 @@ void import_f(string dir, string local_file, string target_file) {
 		}
 	}
 
-	int number = new_file;
+
 	int table_size = number_of_ints_in_block * number_of_the_root_block;
+	int number_of_free = 0;
+	
+	for (int i = 0; i < table_size; i++){
+		if (alloc_table_array[i] == -1) {
+			number_of_free++;
+		}
+	} //Find number of free elements of allocation table
+
+	if (number_of_free < number_of_file_blocks) {
+		cerr << "import: there is not enough memory for this operations in the file system" << endl;
+		return;
+	} //If number of free allocation table elements is less than number of file blocks- we stop import
+
+
+	int new_file = mkfile(dir, target_file, size_of_last_block); //Create new file for import
+
+	if (new_file == -1) {
+		return;
+	} //If creating file for import failed we stop import
+
+	//Reload allocation table
+	
+	//First we need data from allocation table
+	int data2[number_of_ints_in_block] = {0, };
+	
+	char buffer2[100];
+	sprintf (buffer2, "%d", 0);
+	string name2 = dir + "/block" + buffer2;
+	const char * block_name2 = name2.c_str();
+
+	read_data_from_block(data2, block_name2, number_of_ints_in_block); //Now we have an array of data from null block
+
+	//Next we need to have first int from this alloc_table
+	int number_of_the_root_block2 = data2[0] - 1; //Real number of the root block
+	
+	//Next we need to read all alloc_table
+	for (int i = 0; i < number_of_the_root_block; i++) {
+		int data2[number_of_ints_in_block] = {0, };
+
+		char buffer2[100];
+		sprintf (buffer2, "%d", i);
+		string name2 = dir + "/block" + buffer2;
+		const char * block_name2 = name2.c_str();
+
+		read_data_from_block(data2, block_name2, number_of_ints_in_block);
+
+		for (int j = 0; j < number_of_ints_in_block; j++) {
+			alloc_table_array[number_of_ints_in_block * i + j] = data2[j];
+		}
+	}
+
+
+	int number = new_file;
 	for (int i = 1; i < number_of_file_blocks; i++) {
 		
 		int first_free_block = -2;
-		for (int i = 0; i < table_size; i++){
-			if (alloc_table_array[i] == -1) {
-				first_free_block = i;
+		for (int j = 0; j < table_size; j++){
+			if (alloc_table_array[j] == -1) {
+				first_free_block = j;
 				break;
 			}
 		}
 
-		if (first_free_block == -2) {
+		if (first_free_block ==  -2) {
 			cerr << "import: there is not enough memory for this operations in the file system" << endl;
 		}
 
@@ -90,7 +136,7 @@ void import_f(string dir, string local_file, string target_file) {
 
 	}
 
-	number = new_file;
+	number = new_file; //Now we're start again from our first file block, that was created 
 	ifstream infile(real_file_name, ios::binary);
 	
 	for (int i = 0; i < number_of_file_blocks; i++) {
@@ -117,8 +163,9 @@ void import_f(string dir, string local_file, string target_file) {
 		number--;
 	}
 
-	int number_of_changed_blocks = ceil(double((number + 2) * sizeof(int)) / 4096);
-	for (int i = 0; i < number_of_changed_blocks; i++) {
+	//int number_of_changed_blocks = ceil(double((number + 2) * sizeof(int)) / 4096);
+	
+	for (int i = 0; i < number_of_the_root_block; i++) {
 		int data[number_of_ints_in_block] = {0, };
 		for (int j = 0; j < number_of_ints_in_block; j++) {
 			data[j] = alloc_table_array[(i * number_of_ints_in_block) + j];
@@ -136,6 +183,12 @@ void import_f(string dir, string local_file, string target_file) {
 			fclose(block);
 		}
 	}
+
+	/*cerr << "-----------------Allocation table in end import----------------------------" << endl;
+	for (int i = 0; i < number_of_ints_in_block * number_of_the_root_block; i++) {
+		cerr << alloc_table_array[i] << " ";
+	}
+	cerr << endl;*/
 
 }
 

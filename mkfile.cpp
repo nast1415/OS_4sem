@@ -40,7 +40,7 @@ int mkfile(string dir, string target_dir, int target_file_size) {
 		for (int j = 0; j < number_of_ints_in_block; j++) {
 			alloc_table_array[number_of_ints_in_block * i + j] = data[j];
 		}
-	}
+	} //Now we have anallocation table
 
 	vector<string> directories;
 	vector<int> sizes;
@@ -83,8 +83,8 @@ int mkfile(string dir, string target_dir, int target_file_size) {
 		} else {
 			number_of_last_dir = next_block_of_last_directory;
 		}
-	}
-	number_of_last_dir--;
+	} //Go to the last block of our parent directory to add the file to the list
+	number_of_last_dir--; 
 
 
 	char buffer2[100];
@@ -96,11 +96,12 @@ int mkfile(string dir, string target_dir, int target_file_size) {
 	int numb[1] = {0};
 
 	fread(numb, sizeof(int), 1, last_block);
+	
 	if (last_block) {
 		fclose(last_block);
 	}
 
-
+	//Open and read number of writings in the last block of the parent directory
 	
 	int table_size = number_of_ints_in_block * number_of_the_root_block;
 
@@ -115,7 +116,7 @@ int mkfile(string dir, string target_dir, int target_file_size) {
 	if (first_free_block == -2) {
 		cerr << "import: there is not enough memory for this operations in the file system" << endl;
 		return -1;
-	}
+	} //Find a free block for our file
 
 	first_free_block--; //Get real block name
 	
@@ -123,8 +124,8 @@ int mkfile(string dir, string target_dir, int target_file_size) {
 
 	//write info about our directory
 	add_info_to_block(dir, number_of_last_dir, real_directory_name, size_of_real_name, 1, target_file_size, first_free_block, alloc_table_array, table_size);
-	int number_of_changed_blocks = ceil(double((first_free_block + 2) * sizeof(int)) / 4096);
-	for (int i = 0; i < number_of_changed_blocks; i++) {
+
+	for (int i = 0; i < number_of_the_root_block; i++) {
 		int data[number_of_ints_in_block] = {0, };
 		for (int j = 0; j < number_of_ints_in_block; j++) {
 			data[j] = alloc_table_array[(i * number_of_ints_in_block) + j];
