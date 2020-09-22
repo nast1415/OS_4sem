@@ -1,2 +1,3 @@
-# OS_4sem
-My OS homeworks
+# Operating systems course
+
+Contains all course homeworks 
